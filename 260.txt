@@ -1,0 +1,6 @@
+The general design of MPI and p4 lends itself very well to scientific computing problems that require a segmentation of a computational space into portions that can be individually handled by agents, while still needing some level of collaboration. The focus on individual, specific messages delivered generally to specific recipients makes sense when the majority of the collective work is performed on each agent. Some distributed computations commonly seen outside of scientific computing, such as rapid massive queries and data collection (Google), rely more on the collaboration and aggregation of resources controlled by agents rather than their individual contributions. 
+
+In addition, the support for application topologies in MPI, in particular Cartesian grids, seems perfect for real space numerical simulation tasks such as FDTD.
+
+
+

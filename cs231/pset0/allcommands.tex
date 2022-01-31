@@ -1,0 +1,116 @@
+%% Courtesy: Daniel Spielman, via Madhu Sudan --> Chi-Ning Chou --> Anurag Anshu
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{mydefinition}{Definition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{exercise}[theorem]{Exercise}
+
+%Left and right brackets
+\newcommand {\br} [1] {\ensuremath{ \left( #1 \right) }}
+\newcommand {\Br} [1] {\ensuremath{ \left[ #1 \right] }}
+
+
+%Quantum notations
+\newcommand {\norm}[1]{{\| #1 \|}}  
+\newcommand {\bra} [1] {\ensuremath{ \left\langle #1 \right| }}
+\newcommand {\ket} [1] {\ensuremath{ \left| #1 \right\rangle }}
+\newcommand {\ketbratwo} [2] {\ensuremath{ \left| #1 \middle\rangle \middle\langle #2 \right| }}
+\newcommand {\ketbra} [1] {\ketbratwo{#1}{#1}}
+\newcommand{\braket}[2]{\langle#1|#2\rangle}
+\newcommand{\Tr}[1]{\mathrm{Tr}\left(#1\right)}
+\newcommand{\tr}[2]{\mathrm{Tr}_{#1}\left(#2\right)}
+
+
+%Generic math symbols
+\newcommand {\eps} {\varepsilon}
+\newcommand{\ind}[1]{\mathrm{Ind}\left(#1\right)}
+\newcommand {\id} {\ensuremath{\mathbbm{1}}}
+
+
+% Information theory and CS symbols
+\newcommand {\prob} {\ensuremath{\mathrm{Prob}}}
+\newcommand{\bigo}[1]{\mathcal{O}\left(#1\right)}
+\newcommand{\omeg}[1]{\Omega\left(#1\right)}
+
+
+
+%Statistical measures
+\newcommand{\F}{\mathrm{F}}
+\newcommand{\tv}{\mathrm{TV}}
+
+%Fancy alphabets
+\def\cA{\mathcal{A}}
+\def\cB{\mathcal{B}}
+\def\cC{\mathcal{C}}
+\def\cE{\mathcal{E}}
+\def\cG{\mathcal{G}}
+\def\cH{\mathcal{H}}
+\def\cL{\mathcal{L}}
+\def\cM{\mathcal{M}}
+\def\cP{\mathcal{P}}
+\def\cR{\mathcal{R}}
+\def\cS{\mathcal{S}}
+\def\cT{\mathcal{T}}
+\def\cX{\mathcal{X}}
+\def\N{\mathbb{N}}
+\def\Z{\mathbb{Z}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%Commands below can be ignored by the students  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Header
+\newcommand{\handout}[5]{
+   \renewcommand{\thepage}{#1-\arabic{page}}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 6.3in { {\bf #1}
+     	 \hfill {\it #3} }
+       \vspace{4mm}
+       \hbox to 6.3in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.3in { {\it #2 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+
+\newcommand{\lecture}[4]{\handout{#1}{#2}{Lecturer:
+#3}{Scribe: #4}{Lecture #1}}
+
+
+%Editing commands
+\newcommand{\edit}[2]{\st{#1}\hspace{0.05in}\textcolor{blue}{#2}}
+\newcommand{\comm}[1]{(\textcolor{red}{Comment: }#1)}
+
+\newcommand{\cnote}[1]{{\color{brown} \textbf{Chi-Ning's note:} #1}}
+\newcommand{\anote}[1]{{\color{red} \textbf{Anurag's note:} #1}}
+
+%Itemizing and Equation shorthands
+\newcommand{\beit}{\begin{itemize}}
+\newcommand{\enit}{\end{itemize}}
+\newcommand{\been}{\begin{enumerate}}
+\newcommand{\enen}{\end{enumerate}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\enq}{\end{equation}}
+\newcommand{\beqst}{\begin{equation*}}
+\newcommand{\enqst}{\end{equation*}}
+\newcommand{\beqar}{\begin{eqnarray}}
+\newcommand{\enqar}{\end{eqnarray}}
+\newcommand{\beqarst}{\begin{eqnarray*}}
+\newcommand{\enqarst}{\end{eqnarray*}}
+
+
+
+

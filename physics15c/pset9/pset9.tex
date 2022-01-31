@@ -1,0 +1,191 @@
+\documentclass[11pt]{article}
+
+\author{Vassilios Kaxiras}
+\title{Physics 15c Pset 9}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[bottom]{footmisc}
+\usepackage[margin=1in]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{principle}{Principle}
+\newtheorem*{solution}{Solution}
+
+\usepackage{mdframed}
+\newcommand{\Mod}[1]{\,(\mathrm{mod}\,#1)}
+
+\renewcommand{\u}[1]{\underline{#1}}
+
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.9\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newenvironment{coherence}{\begin{mdframed}\begin{center}\underline{Coherence Checks}\end{center}}{\end{mdframed}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Vassilios Kaxiras}
+
+\begin{document}
+
+\maketitle
+
+\begin{solution}[1]
+  We can find the index of refraction after which light incident at an angle $\theta=80$ deg to the normal on the inside of the fiber comes out at an angle greater than 90 degrees on the other side, which will result in total internal reflection. From Snell's Law,
+  \eq
+    \frac{n_{\text{glass}}\sin(4\pi/9)}{n_{\text{air}}}> \sin(\pi/2)=1\implies \boxed{n_{\text{glass}}>\frac{n_{\text{air}}}{\sin(4\pi/9)}\approx 1.016}
+  \qe
+\end{solution}
+
+\begin{solution}[2]
+  We can use a half wave plate to switch the polarization of the light. Suppose we have a half wave plate with axes rotated 45 degrees counterclockwise from $x$-$y$; that is, its first axis is at $\frac{1}{\sqrt{2}}(\hat{x}+\hat{y})$ (denoted $+$), and its second axis is at $\frac{1}{\sqrt{2}}(-\hat{x}+\hat{y})$ (denoted $-$). The wave before the plate can be written
+  \eq
+    \frac{E_0}{\sqrt{2}}\left(\frac{1}{\sqrt{2}}\mat 1 \\ 1\tam-\frac{1}{\sqrt{2}}\mat -1 \\ 1\tam\right)e^{i(kz-\omega t)}
+  \qe
+  If the plate is of length $l$ and the free-space wavevector of the wave is $k$, then over its course the + component of the wave will pick up a phase of $n_+kl$ while the - component will pick up a phase of $n_-kl$. If we choose $l=\frac{\lambda}{2}=\frac{\pi}{k}$, then we see that the wave after leaving the plate will be
+  \eq
+    \frac{E_0}{\sqrt{2}}\left(e^{in_+kl}\frac{1}{\sqrt{2}}\mat 1 \\ 1\tam-e^{in_-kl}\frac{1}{\sqrt{2}}\mat -1 \\ 1\tam\right)e^{i(k(z-l)-\omega t)}
+  \qe
+  now we see if we choose $n_+=1,\;n_-=2$, this becomes
+  \eq
+    \frac{E_0}{\sqrt{2}}\left(-\frac{1}{\sqrt{2}}\mat 1 \\ 1\tam-\frac{1}{\sqrt{2}}\mat -1 \\ 1\tam\right)(-e^{i(kz-\omega t)})=E_0\mat 0 \\ 1 \tam e^{i(kz-\omega t)}
+  \qe
+  since a higher index of refraction corresponds to a lower speed of the wave, we see that the "slow" axis is along - while the "fast" axis is along +. See Figure (\ref{fig:plate}) for a graphical description. Lastly, note that two quarter wave plates of lengths $\frac{\lambda}{4}=\frac{\pi}{2k}$ each with the above axes placed back-to-back will yield this desired half wave plate.
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}[scale=2.5]
+      \draw [->] (0, 0) -- (0.5, 0.5) node[below right] {$+$, "fast"} -- (1, 1);
+      \draw [->] (0, 0) -- (-0.5, 0.5) node[below left] {$-$, "slow"} -- (-1, 1);
+      \draw [->] (0, 0) -- (1.414, 0) node[right] {$\hat{x}$};
+      \draw [->] (0, 0) -- (0, 1.414) node[above] {$\hat{y}$};
+    \end{tikzpicture}
+    \caption{Axes of the half-wave plate.}
+    \label{fig:plate}
+  \end{figure}
+\end{solution}
+
+\begin{solution}[3]
+  \begin{enumerate}[(a)]
+    \item The standing wave from Lecture 17 is described by
+    \eq
+      \vec{E}=2E_0\cos(kz)\cos(\omega t)\hat{x}\\
+      \vec{B}=\frac{2E_0}{c}\sin(kz)\sin(\omega t)\hat{y}
+    \qe
+    so the energy density is
+    \eq
+      \mathcal{E}=\frac{1}{2}\epsilon_0\vec{E}^2+\frac{1}{2\mu_0}\vec{B}^2=\frac{\epsilon_0}{2}(\vec{E}^2+c^2\vec{B}^2)=2\epsilon_0E_0^2(\cos^2(kz)\cos^2(\omega t)+\sin^2(kz)\sin^2(\omega t))
+    \qe
+    Assuming $k=\frac{\pi}{L}$ for region of size $L$, we can plot $\mathcal{E}$ at various values of $\omega t$ in Figure (\ref{fig:dens})
+    \img{3a}{Plot of $\frac{\mathcal{E}}{2\epsilon_0E_0^2}$ as a function of $kz$ for $\omega t=0,\;\pi/2,\;\pi$. The plot for $\omega t=\pi$ is the same as that for $\omega t=0$.}{fig:dens}
+    \item The Poynting vector is
+    \eq
+      \vec{S}=\frac{1}{\mu_0}(\vec{E}\times\vec{B})=\epsilon_0c^2(\vec{E}\times\vec{B})=\epsilon_0cE_0^2\sin(2kz)\sin(2\omega t)\hat{z}
+    \qe
+    using the same assumptions as part (a), we can plot this for $\omega t=\pi/4$ and $\omega t=3\pi/4$ in Figure (\ref{fig:point}). We see that in this graph, when $\omega t=\pi/4$, we are between the $\omega t=0$ and $\omega t=\pi/2$ graphs of the energy density. To transition between those two energy densities, we need energy to flow from the left and the right to the center. This would correspond to energy flow being along the positive $z$ axis on the left of the region, and along the negative $z$ direction on the right of the region. This is exactly what we see in the Poynting vector graph, with it being negative on the right and positive on the left. Similarly, in the $\omega t=3\pi/4$ case, we are between $\omega t=\pi/2$ and $\omega t=\pi$, so energy should be moving from the center out to the left and right. This means energy on the left should have net movement to the left, since that is the closest energy peak, and energy on the right should move to the right, while energy in the center will have no net movement because it will move equally to the left and right. This is exactly what we see in the Poynting vector graph.\\
+    Lastly, we can see that in both plots of the Poynting vector that its integral over the entire region is 0. This reflects the fact that there is no net energy flow into or out of the region, since the wave is standing.
+    \img{3b}{Plot of $\frac{\vec{S}\cdot\hat{z}}{\epsilon_0cE_0^2}$ as a function of $kz$ for $\omega t=\pi/4,\;3\pi/4$.}{fig:point}
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[4]
+  \begin{enumerate}[(a)]
+    \item When the water is displaced a distance $y$, one vertical region is raised by $y$ while the other is lowered by $y$. Taking 0 to be at equilibrium and $\rho$ to be the (linear) mass density of the water, the potential energy of this system is 
+    \eq
+      \int_0^{y}(\rho dx)gx+\int_0^{-y}(\rho dx)gx=\rho g\left(\left[\frac{1}{2}x^2\right]_0^y-\left[\frac{1}{2}x^2\right]_{-y}^0\right)=\rho gy^2
+    \qe
+    If we assume almost all the mass of the water is in the horizontal region, and all the water moves together, then the kinetic energy of this system is
+    \eq
+      \frac{1}{2}\rho l(\dot{y})^2
+    \qe
+    The total energy cannot change with time, so we have
+    \eq
+      0=\frac{d}{dt}\left(\frac{1}{2}\rho l(\dot{y})^2+\rho gy^2\right)=\rho l\dot{y}\ddot{y}+2\rho gy\dot{y}\implies \ddot{y}=-\frac{2g}{l}y\implies \boxed{\omega=\sqrt{\frac{2g}{l}}}
+    \qe
+    So the dispersion relation is
+    \eq
+      k=\frac{2\pi}{\lambda}=\frac{\pi}{l}\implies l=\frac{\pi}{k}\implies \boxed{\omega=\sqrt{\frac{2}{\pi}gk}}
+    \qe
+    \item Using $\omega=\sqrt{gk}$, we see
+    \eq
+      v_p=\frac{\omega}{k}=\sqrt{\frac{g}{k}}=\sqrt{\frac{g\lambda}{2\pi}}
+    \qe
+    and 
+    \eq
+      v_g=\frac{d\omega}{dk}=\frac{1}{2}\sqrt{\frac{g}{k}}=\frac{1}{2}v_p
+    \qe
+    so for $\lambda=100$ m, we have
+    \eq
+      \boxed{v_p\approx 12.5\;\text{m/s},\quad v_g\approx 6.25\;\text{m/s}}
+    \qe
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[5]
+  \begin{enumerate}[(a)]
+    \item We can assume a normal mode solution of the form 
+    \eq
+      \psi=Ae^{i(kx-\omega t)}
+    \qe
+    Plugging this in to the wave equation gives
+    \eq
+      -A\omega^2 e^{i(kx-\omega t)}=c^2(-Ak^2e^{i(kx-\omega t)}-\alpha Ak^4e^{i(kx-\omega t)})\implies
+      \boxed{\omega=ck\sqrt{1+\alpha k^2}}
+    \qe
+    If we're only considering small $\alpha$, we can Taylor expand the above around $\alpha=0$ to get
+    \eq
+      \omega\approx ck\left(1+\frac{1}{2}k^2\alpha\right)
+    \qe
+    \item A string with fixed ends will have modes
+    \eq
+      k=\frac{n\pi}{L}
+    \qe
+    so for small $\alpha$ the frequencies will be
+    \eq
+      \omega=\frac{cn\pi}{L}\left(1+\frac{n^2\pi^2\alpha}{2L^2}\right)
+    \qe
+    The first 4 of these are
+    \eq
+      \boxed{f_1=\frac{c}{2L}\left(1+\frac{\pi^2\alpha}{2L^2}\right),\quad
+      f_2=\frac{c}{L}\left(1+\frac{2\pi^2\alpha}{L^2}\right),\quad
+      f_2=\frac{3c}{2L}\left(1+\frac{9\pi^2\alpha}{2L^2}\right),\quad
+      f_2=\frac{2c}{L}\left(1+\frac{8\pi^2\alpha}{L^2}\right)}
+    \qe
+    We can also plot $\omega$ as a function of $n$ is Figure (\ref{fig:nfreqs}).\\
+    A perfectly flexible string has the dispersion relation
+    \eq
+      \omega=ck
+    \qe
+    we can plot this alongside our stiff string in Figure (\ref{fig:nfreqs}), and from this we see that as $n$ increases, $\omega$ for the stiff string begins to grow larger than $\omega$ for the flexible string.
+    \img{5b}{Plot of $\omega$ for a stiff and flexible string as a function of $n$ for $1\leq n< 8$, with $L=1\; \text{m},\;\alpha = 0.005\;\text{m}^2$.}{fig:nfreqs}
+
+  \end{enumerate}
+\end{solution}
+
+\end{document}

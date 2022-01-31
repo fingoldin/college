@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+
+\author{Vassilios Kaxiras}
+\title{Physics 160 Pset 1}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[bottom]{footmisc}
+\usepackage[margin=1in]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{principle}{Principle}
+\newtheorem*{solution}{Solution}
+
+\usepackage{mdframed}
+\newcommand{\Mod}[1]{\,(\mathrm{mod}\,#1)}
+
+\renewcommand{\u}[1]{\underline{#1}}
+
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.5\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newenvironment{coherence}{\begin{mdframed}\begin{center}\underline{Coherence Checks}\end{center}}{\end{mdframed}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Vassilios Kaxiras}
+
+\begin{document}
+
+\maketitle
+
+\begin{solution}[1]
+  Consider a 3-bit gate $G$ with inputs $A,B,C$ and outputs $A',B',C'$.
+  \begin{center}
+    \begin{tabular}{ccc|ccc}
+      A & B & C & A' & B' & C' \\
+      \hline
+      0 & 0 & 0 & 1 & 0 & 0 \\
+      0 & 1 & 0 & 1 & 1 & 0 \\
+      0 & 0 & 1 & 1 & 0 & 1 \\
+      0 & 1 & 1 & 0 & 1 & 1 \\
+      1 & 0 & 0 & 0 & 0 & 0 \\
+      1 & 1 & 0 & 0 & 1 & 0 \\
+      1 & 0 & 1 & 0 & 0 & 1 \\
+      1 & 1 & 1 & 1 & 1 & 1
+    \end{tabular}
+  \end{center}
+  This gate is reversible, since all the outputs are simply a permutation of all the inputs. And, we can get NAND from this:
+  \eq
+    \text{NAND}(x,y)=G(0,x,y)_{(1)}
+  \qe
+  where $G_{(1)}=A'$.
+\end{solution}
+
+\begin{solution}[2]
+  \begin{enumerate}[(a)]
+    \item 
+    \begin{enumerate}[i.]
+      \item Yes
+      \eq
+        C^{\dagger}=(A+B)^{\dagger}=A^{\dagger}+B^{\dagger}=A+B=C
+      \qe
+      \item No, unless $A,B$ commute.
+      \eq 
+        C^{\dagger}=(AB)^{\dagger}=B^{\dagger}A^{\dagger}=BA
+      \qe
+      which is not necessarily equal to $AB=C$.
+      \item No, unless $C=0$.
+      \eq
+        C^{\dagger}=(i(A+B))^{\dagger}=-i(A+B)^{\dagger}=-i(A^{\dagger}+B^{\dagger})=-i(A+B)=-C
+      \qe
+      \item Yes
+      \eq
+        C^{\dagger}=(AB+BA)^{\dagger}=B^{\dagger}A^{\dagger}+A^{\dagger}B^{\dagger}=BA+AB=C
+      \qe
+      \item Yes
+      \eq
+        C^{\dagger}=(i(AB-BA))^{\dagger}=-i(B^{\dagger}A^{\dagger}-A^{\dagger}B^{\dagger})=i(AB-BA)=C
+      \qe
+    \end{enumerate}
+    \item TODO
+    \item 
+  \end{enumerate}
+\end{solution}
+
+\end{document}

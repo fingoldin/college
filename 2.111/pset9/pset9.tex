@@ -1,0 +1,227 @@
+\documentclass[11pt]{article}
+
+\author{Vassilios Kaxiras}
+\title{MIT 8.370 Pset 9}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[bottom]{footmisc}
+\usepackage[margin=1in]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{principle}{Principle}
+\newtheorem*{solution}{Solution}
+
+\usepackage{mdframed}
+\newcommand{\Mod}[1]{\,(\mathrm{mod}\,#1)}
+
+\renewcommand{\u}[1]{\underline{#1}}
+
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.9\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newenvironment{coherence}{\begin{mdframed}\begin{center}\underline{Coherence Checks}\end{center}}{\end{mdframed}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Vassilios Kaxiras}
+
+\begin{document}
+
+\maketitle
+
+\begin{solution}[1]
+  \begin{enumerate}[(a)]
+    \item Note first that
+    \eq
+      \alpha\ket{0}+\beta\ket{1}=\frac{\alpha+\beta}{\sqrt{2}}\ket{+}+\frac{\alpha-\beta}{\sqrt{2}}\ket{-}
+    \qe
+    this gets encoded into
+    \eq
+      \frac{\alpha+\beta}{\sqrt{2}}\ket{+++}+\frac{\alpha-\beta}{\sqrt{2}}\ket{---}
+    \qe
+    Now suppose (without loss of generality) that someone measures the first qubit in the $\{\ket{0},\ket{1}\}$ basis. Then if they measure $\ket{0}$, the state will become
+    \eq
+      \frac{\alpha+\beta}{\sqrt{2}}\ket{0++}+\frac{\alpha-\beta}{\sqrt{2}}\ket{0--}
+    \qe
+    then we apply the phase-flip error correcting procedure, which involves projecting into one of these 4 subspaces:
+    \eq
+      \ket{+++}\bra{+++}+\ket{---}\bra{---}\\
+      \ket{-++}\bra{-++}+\ket{+--}\bra{+--}\\
+      \ket{+-+}\bra{+-+}+\ket{-+-}\bra{-+-}\\
+      \ket{++-}\bra{++-}+\ket{--+}\bra{--+}
+    \qe
+    We immediately see that we will only ever project into one of the first two subspaces. Projecting into the first subspace will give the state
+    \eq
+      \frac{\alpha+\beta}{\sqrt{2}}\ket{+++}+\frac{\alpha-\beta}{\sqrt{2}}\ket{---}
+    \qe
+    while projecting into the second subspace will give the state
+    \eq
+      \frac{\alpha+\beta}{\sqrt{2}}\ket{-++}+\frac{\alpha-\beta}{\sqrt{2}}\ket{+--}
+    \qe
+    which will then get corrected by applying a $\sigma_z$ to the first qubit. \\
+    If the person measures the first qubit as $\ket{1}$, then the state becomes
+    \eq
+      \frac{\alpha+\beta}{\sqrt{2}}\ket{1++}-\frac{\alpha-\beta}{\sqrt{2}}\ket{1--}
+    \qe
+    Once again we will only project into the first two subspaces. Projecting into the first gives
+    \eq
+      \frac{\alpha+\beta}{\sqrt{2}}\ket{+++}+\frac{\alpha-\beta}{\sqrt{2}}\ket{---}
+    \qe
+    while projecting into the second gives
+    \eq
+      -\frac{\alpha+\beta}{\sqrt{2}}\ket{-++}-\frac{\alpha-\beta}{\sqrt{2}}\ket{+--}
+    \qe
+    which will get corrected by applying a $\sigma_z$ on the first qubit.\\
+    So, in any case, the error correction algorithm will fix the error incurred from the measurement.
+    \item If the person measures in the $\{\ket{+},\ket{-}\}$ basis, then if they measure $\ket{+}$ the state becomes $\ket{+++}$, and if they measure $\ket{-}$ the state becomes $\ket{---}$. The state will then get decoded into $\ket{+}$ or $\ket{-}$, respectively. The only information about $\alpha,\beta$ that remains lies in the probabilities of these two outcomes, which are
+    \eq
+      \frac{(\alpha+\beta)^2}{2},\quad \frac{(\alpha-\beta)^2}{2}
+    \qe
+    for $\ket{+},\ket{-}$, respectively. Otherwise, the state is destroyed.
+    \item What's happening here is we're applying some projection matrix $M$ on one of the qubits, and then attempting to error correct it for a $\sigma_z$ error. If $M=\sum_{i}M_i$ for some matrices $M_i$, then when we perform the projection onto the 4 subspaces to do error correction there is some probability that we project from the state 
+   \eq
+    M_i\left(\frac{\alpha+\beta}{\sqrt{2}}\ket{+++}+\frac{\alpha-\beta}{\sqrt{2}}\ket{---}\right)
+  \qe
+  So, if our error correction algorithm can correct all the $M_i$ errors, then it will correct an $M$ error. Now, noting that
+    \eq
+      \ket{0}\bra{0}=\frac{1}{2}(I+\sigma_z),\quad
+      \ket{1}\bra{1}=\frac{1}{2}(I-\sigma_z)\\
+      \ket{+}\bra{+}=\frac{1}{2}(I+\sigma_x),\quad
+      \ket{-}\bra{-}=\frac{1}{2}(I-\sigma_x)
+    \qe
+    we see that if we measure $\ket{0},\ket{1}$ we will be able to correct the error, since we can correct $\sigma_z$ errors, while if we measure $\ket{+},\ket{-}$ we won't, since we can't correct a $\sigma_x$ error.
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[2]
+  \begin{enumerate}[(a)]
+    \item The CSS codes are
+    \eq
+      C_1=\mat
+        1&1&1&1&1&1&1&1&1 \\
+        0&0&0&1&1&1&1&1&1 \\
+        1&1&1&1&1&1&0&0&0 
+      \tam\\
+      C_2=\mat
+        0&0&0&1&1&1&1&1&1 \\
+        1&1&1&1&1&1&0&0&0 
+      \tam
+    \qe
+    \item We can apply $\sigma_x$ and $\sigma_z$ on every qubit to, respectively, apply a $\sigma_x$ and $\sigma_z$ on the logical qubit. For $\sigma_x$, this works because $\ket{0}_L$ is a superposition of states that are the bitwise nots of the states in $\ket{1}_L$. It works for $\sigma_z$ because all the states in $\ket{0}_L$ have even numbers of 1's, so they won't flip phase, while all the states in $\ket{1}_L$ have odd numbers of 1's, so they will all flip.
+    \item An example of a degenerate pair of errors is a phase flip on qubit 1, and a phase flip on qubit 2. This will get propagated into a phase flip on the first block of 3 qubits in the code, which will get corrected. However, we can't tell if it was qubit 1 or qubit 2 that introduced the phase flip, since from the perspective of the phase correction part of the algorithm, they both look like a phase flip on the first block. 
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[3]
+  \begin{enumerate}[(a)]
+    \item Since we perform bit error correection on 3 different groups of 3 qubits separately, if we have bit errors on two qubits in different blocks, we can correct it. There are 3 possible pairs of 2 such blocks of 3 qubits, and within each block there are 3 qubits that can incur the error. Thus there are 27 unique two-qubit $\sigma_x$ errors that can be correected. \\
+    Now, if multiple phase flip errors occur in one of the blocks of 3, that will get corrected because the overall phase of that block is corrected. Furthermore, if we have two phase flips in a block, the overall phase of that block is unchanged, so there is nothing to correct anyway. So, since there are 3 blocks and 3 possible groups of 2 qubits in each block, there are 9 unique two-qubit $\sigma_z$ errors that can be corrected.
+    \item We can consider the 9 qubit code as a CSS code with the codes as defined in problem 2. $H_2$, the parity check matrix corresponding to the code $C_2^{\perp}$, is
+    \eq
+      H_2=(C_2^{\perp})^{\perp}=C_2=\mat
+        0&0&0&1&1&1&1&1&1 \\
+        1&1&1&1&1&1&0&0&0 
+      \tam
+    \qe
+    The parity check matrix for $C_1$ is
+    \eq
+      H_1=\mat
+        1&1&0&0&0&0&0&0&0\\
+        0&1&1&0&0&0&0&0&0\\
+        0&0&0&1&1&0&0&0&0\\
+        0&0&0&0&1&1&0&0&0\\
+        0&0&0&0&0&0&1&1&0\\
+        0&0&0&0&0&0&0&1&1
+      \tam
+    \qe
+    so for bit flip errors $e_1$ and phase flip errors $e_2$, we obtain the syndrome
+    \eq
+      s_1=e_1H_1^T,\quad s_2=e_2H_2^T
+    \qe
+    Consider the syndrome
+    \eq
+      s_1=\mat 1&0&1&0&0&0\tam,\quad s_2=\mat 1 & 0\tam
+    \qe
+    One error that could cause this is a bit flip to the first and fourth qubits, and a phase flip to the 7th qubit:
+    \eq
+      e_1^{(1)}=\mat 1&0&0&1&0&0&0&0&0 \tam,\quad
+      e_2^{(1)}=\mat 0&0&0&0&0&0&1&0&0 \tam
+    \qe
+    while another error that gives the same syndrome is a bit flip and a phase flip to the first and fourth qubits:
+    \eq
+      e_1^{(2)}=\mat 1&0&0&1&0&0&0&0&0 \tam,\quad
+      e_2^{(2)}=\mat 1&0&0&1&0&0&0&0&0 \tam
+    \qe
+    In the first error model, the probabilities of the these two errors that give the same syndrome occuring are
+    \eq
+      p^3(1-p)^{15},\quad p^4(1-p)^{14}
+    \qe
+    respectively. In the second model, since the second error corresponds to two $\sigma_y$ errors, they are
+    \eq
+      \left(\frac{q}{3}\right)^3(1-q)^6,\quad \left(\frac{q}{3}\right)^2(1-q)^7
+    \qe
+    so we see that if $p,q\ll 1$, choosing the most likely error with model 1 will give error 1, while model 2 will give error 2. This is because if we consider any other error that gives the above syndrome, it must be less probable, since the two errors above lead to the least factors of $p$ and $q$. However, these two errors correspond to two different corrections, namely
+    \eq
+      \sigma_x\otimes I\otimes I\otimes \sigma_x\otimes I\otimes I\otimes \sigma_z\otimes I\otimes I\\
+      \sigma_y\otimes I\otimes I\otimes \sigma_y\otimes I\otimes I\otimes I\otimes I\otimes I\\
+    \qe
+    respectively.
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[4]
+  \begin{enumerate}[(a)]
+    \item The codewords are
+    \eq
+      \ket{0000+C_2}=\frac{1}{\sqrt{2}}(\ket{0000}+\ket{1111}),\quad
+      \ket{1100+C_2}=\frac{1}{\sqrt{2}}(\ket{1100}+\ket{0011})\\
+      \ket{1010+C_2}=\frac{1}{\sqrt{2}}(\ket{1010}+\ket{0101}),\quad
+      \ket{0110+C_2}=\frac{1}{\sqrt{2}}(\ket{0110}+\ket{1001})
+    \qe
+    \item The CSS procedure computes and measures the syndromes $e_1H_1^{T}$ and $e_2H_2^T$ for $C_1$ and $C_2^{\perp}$, to detect bit flip and phase flip errors. If $e_1$ or $e_2$ have weight 1, then the minimum codeword weight in $C_1$ and $C_2^{\perp}$ must be 2 in order for the corresponding $e_1H_1^T$ or $e_2H_2^T$ to be nonzero. So to show that this is a 1 error detecting code, we have to show that the minimum Hamming weight of any codeword in $C_1$ is 2, and the minimum Hamming weight of any codeword in $C_2^{\perp}$ is 2. First, note that $C_2^{\perp}=C_1$, since $C_2^{\perp}$ is the subspace with even numbers of 1s. Thus we just have to show that the minimum weight of any non-zero codeword in $C_1$ is 2, which we can easily see from its definition, as every codeword has at least 2 1s.
+    \item Let's create the following mapping between two-qubit logical states and encoded coset states:
+    \eq
+      \ket{00}_L\to\ket{0000+C_2},\quad
+      \ket{01}_L\to\ket{1100+C_2}\\
+      \ket{10}_L\to\ket{1010+C_2},\quad
+      \ket{11}_L\to\ket{0110+C_2}
+    \qe
+    So we see
+    \eq
+      \sigma_x^{(1)}=\sigma_x\otimes I\otimes \sigma_x\otimes I,\quad
+      \sigma_x^{(2)}=\sigma_x\otimes \sigma_x\otimes I\otimes I\\
+      \sigma_z^{(1)}=\sigma_z\otimes \sigma_z\otimes I\otimes I,\quad
+      \sigma_z^{(2)}=\sigma_z\otimes I\otimes \sigma_z\otimes I
+    \qe
+  \end{enumerate}
+\end{solution}
+
+\end{document}

@@ -1,0 +1,335 @@
+%This template is based on one provided by the American Physical Society for submission to its journals.
+
+\documentclass[aps,twocolumn,preprintnumbers]{revtex4}
+
+%The following packages add LaTeX commands that make formatting and writing math easier
+
+\usepackage{graphicx}  % Include figure files
+\usepackage{subfigure}
+\usepackage{multirow}
+
+\linespread{1.1}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{parskip}
+\usepackage[T1]{fontenc}
+\usepackage{dcolumn}   % Align table columns on decimal point
+
+\usepackage{bm}        % bold math
+\usepackage{amsfonts}  % Common math fonts
+\usepackage{amsmath}   % Common math functions
+\usepackage{amssymb}   % Common math symbols
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+%The following custom commands simplify commonly used LaTeX commands
+
+\newcommand{\pic}[2]{\begin{center} \includegraphics[scale=#1]{#2}\end{center}}
+\newcommand{\re}[1]{\mathrm{Re}\left(#1\right)}
+\newcommand{\im}[1]{\mathrm{Im}\left(#1\right)}
+\newcommand{\bdot}[1]{\dot{ \bb {#1}}}
+\newcommand{\bddot}[1]{\ddot{ \bb {#1}}}
+\newcommand{\bidot}[1]{\dot{ \bi{ #1}}}
+\newcommand{\biddot}[1]{\ddot{ \bi {#1}}}
+\newcommand{\ep}{\varepsilon}
+\newcommand{\for}{\quad \quad \mathrm{for} \quad\quad}
+\newcommand{\then}{\quad \quad \implies \quad\quad}
+\newcommand{\an}{\quad \quad \mathrm{and} \quad\quad}
+\newcommand{\ifff}{\quad \quad \mathrm{if} \quad\quad}
+\newcommand{\where}{\quad \quad \mathrm{where} \quad\quad}
+\newcommand{\dg}{^\dagger}
+\newcommand{\semi}{\quad \quad \mathrm{;} \quad\quad}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\brac}[1]{\left[ #1 \right]}
+\newcommand{\exv}[1]{\left\langle #1 \right\rangle}
+\newcommand{\pwisein}{\left\{ \begin{array}{ll}}
+\newcommand{\pwiseout}{\end{array}\right.}
+\newcommand{\trace}[1]{\mathrm{Tr} \left( #1 \right)}
+\renewcommand{\det}[1]{\mathrm{det}\left( #1 \right)}
+\newcommand{\del}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\fulld}[1]{\frac{d}{d #1}}
+\newcommand{\fulldd}[2]{\frac{d #1}{d #2}}
+\newcommand{\dell}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\delltwo}[2]{\frac{\partial^2 #1}{\partial #2 ^2}}
+\newcommand{\bb}{\mathbf}
+\newcommand{\bi}{\boldsymbol}
+\newcommand{\radhalf}{ \frac{ \sqrt{2}}{2}}
+\newcommand{\sigx}{\left( \begin{array}{cc} 0 & 1\\ 1 & 0 \end{array}\right)}
+\newcommand{\sigy}{\left( \begin{array}{cc} 0 & -i\\ i & 0 \end{array}\right)}
+\newcommand{\sigz}{\left( \begin{array}{cc} 1 & 0\\ 0 & -1 \end{array}\right)}
+\renewcommand{\matrix}[1]{\left( \begin{array} #1 \end{array}\right)}
+\newcommand{\thermo}[3]{\left( \frac{\partial #1}{\partial #2} \right)_{#3}}
+\newcommand{\coolfrac}[2]{\left( \frac{ #1}{ #2} \right)}
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.5\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\setlength{\parindent}{10pt}
+
+\begin{document}
+
+\title{Cold Atom Quantum Computing}
+
+\author{Vassilios Kaxiras}
+
+\affiliation {\it ES 274 Final Project}
+
+\date{December 12, 2021}
+
+\begin{abstract}  
+
+Cold atom quantum computing emerged as a promising field within quantum information with the turn of the 21st century. In this paper, we will discuss the origins, background, and theory behind this platform, with a special focus on Rydberg atom based systems. Some current obstacles faced by research in this field will be detailed, and we will propose some new possibilities for quantum gate implementations on the Rydberg platform.
+
+\end{abstract}
+
+\maketitle 
+
+\section{Introduction}
+
+Cold atom quantum computing provides a platform for digital and analog quantum computation that promises high fidelity of operations and impressive scalability. The most common implementation utilizes Rubidium atoms trapped in optical lattices, from which qubits are formed between various energy levels of each atom's one valence electron. It is possible to choose these states such that they are exceptionally long-lived and decoupled from their environment, and ensembles of over 50 have already been demonstrated, while systems of 100 to 1000 seem realizable in the next few decades \cite{summary}. 
+Reliable and rapid manipulation of these atomic arrays has been demonstrated with optical tweezers, which can capture single atoms and move them between wells in the optical lattice \cite{measure}. Then, the state of these atoms can be read out with fluorescence imaging \cite{measure}. For digital calculations, arbitrary single-qubit gates can be easily applied with finely controlled laser pulses on individual atoms, while efficient implementation of 2-qubit gates is possible by relying on strong inter-atom interactions \cite{gates}. So-called highly excited Rydberg states in these atoms provide the interactions for these 2-qubit gates to be implemented across 2 or 3 interatomic distances. Besides such digital computation, other manipulation of Rydberg array Hamiltonians is possible, allowing for more general analog calculations and quantum simulations. For instance, Hamiltonian engineering may be used to solve classically hard optimization problems, such as the maximum independent set problem \cite{maxset}. \\
+In this paper, we will focus on the theory behind digital quantum computing on the Rydberg platform. We will describe the setup and manipulation of Rydberg arrays. We will also discuss the various methods of defining qubits and performing operations on them, and will investigate the power of certain optical gate implementations to realize entangling 2-qubit states.
+
+\section{Rydberg Atom Physics}
+
+\subsection{Definition of Rydberg Atoms}
+Generally, we call any atom with a valence electron in a high $n$ - high principle quantum number - state a \textit{Rydberg atom}. We denote this electronic state as $\ket{r}$, while ground states are written as $\ket{g}$. Rydberg states tend to be loosely bound and very nonlocal.
+
+\subsection{Dipole-Dipole Interactions}
+One key property of the loosely bound orbits of Rydberg states is correspondingly strong electric dipole moments
+\eq
+  \vec{p}=-e\vec{d}
+\qe
+where $\vec{d}$ is the characteristic displacement vector between the Rydberg electron and the nucleus. This leads to a dipole-dipole interaction between neighboring Rydberg atoms separated by a vector $\vec{r}$ of 
+\eq
+  V=\frac{e^2}{4\pi\epsilon_0}\frac{1}{r^3}(\vec{d}_1\cdot\vec{d}_2-3(\vec{d}_1\cdot\hat{r})(\vec{d}_2\cdot\hat{r}))
+\qe
+The dipole moment scales $|d|$ with $n^2$ \cite{concise}, so the overall interaction $V$ scales with $n^4$, leading to particularly strong interaction for higher-$n$ Rydberg states. This pertubation introduced by $V$ is first-order if the two atoms are prepared in dipole-coupled states: for example, if two atoms of the same species are prepared in the $\ket{nS}$ and $\ket{nP}$ states \cite{gates}. $n$ here refers to the principle quantum number, while $P/S$ indicate angular momentum numbers. Generalizing by rewriting $nS$ as $j$ and $nP$ as $k$, the interaction Hamiltonian between the two two-atom states $\ket{j}$ and $\ket{k}$ is
+\eq
+  H_{jk}=\frac{C_3}{R^3}\ket{j}\bra{k}+\text{h.c.},\quad C_3\propto n^4
+\qe
+If the atoms are not in a dipole-coupled state, such as the case where they are in the same state or have different principle quantum numbers \cite{gates}, then this dipole-dipole interaction becomes a second order pertubation, giving an energy shift on the order of $(1/R^3)=1/R^6$, and an interaction term
+\eq
+  H_{j}= \frac{C_6}{R^6}\ket{j}\bra{j}, \quad C_6\propto C_3^2
+\qe
+This is called a van Der Walls interaction (vdW).\\
+
+\subsection{Rydberg Blockade}
+One of the consequences of the above described strong dipole-dipole and vdW interactions is the so-called \textit{Rydberg blockade}, which has important applications for conditional operations in quantum information processing implemented on the Rydberg platform. The Rydberg blockade refers to the shifting of Rydberg energy levels due to the presence of other nearby atoms in Rydberg states, and this effect has been concretely experimentally observed \cite{block}. There is some critical distance $R_b$ at which the energy level shifting due to this behavior becomes pronounced.
+This is visualized in Figure (\ref{fig:blockade}). A consequence of this is, if we optically pump an ensemble of ground-state atoms with the $\ket{g}\to\ket{r}$ transition frequency, we will only observe one Rydberg atom per spherical region of radius $R_b$, since once one atom in such a region is excited to $\ket{r}$, it will shift the energies of the Rydberg states of the atoms near it off-resonance to the pump \cite{concise}.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[ticks=none,xmin=-0.2,ymin=-2,axis x line=bottom,axis y line=left,xlabel={$R$},ylabel={$E$}]
+      \addplot [blue,domain=0.4:3,samples=200] {1/(x*x*x)};
+    \end{axis}
+    \draw[thick,red] (3,0) -- (3,5); 
+    \draw (3, 5) node [above] {$R_b$};
+    \draw[blue,dashed] (0, 0.68) -- (5.5, 0.68);
+    \draw (7, 0.68) node [right] {$\ket{rr}$};
+  \end{tikzpicture}
+  \caption{Plot of dual-Rydberg state $\ket{rr}$ of two nearby atoms separated by a distance $R$ showing Rydberg blockade below a characteristic distance $R_b$.}
+  \label{fig:blockade}
+\end{figure}
+
+\section{Rydberg Array Design}
+
+The leading method of loading sets of Rydberg atoms into certain geometries is by laser cooling them and depositing them in optical traps \cite{gates}. These optical traps are often created as part of an optical lattice, which provides a periodic potential trapping the atoms in intensity minima \cite{3d}. As early as 2007, an experimental demonstration of 250 atoms trapped in such a lattice was achieved \cite{3d}.\\
+Once loaded, position measurements can be performed on such arrays through fluorescence imaging using CCD cameras \cite{3d}. This measurement can also be made state-dependent, allowing for the projective measurements needed for quantum computation \cite{proj}. This leads to visualizations such as Figure (\ref{fig:measure}).\\
+\img{measure}{Defect-free $N\geq 100$ arrays of atoms in an optical lattice. Reprinted from Ohl de Mello \textit{et al.}}{fig:measure}
+However, this loading process is naturally stochastic, with current implementations limited to about 50\% probability of loading a particular atom into a particular potential well of the lattice \cite{concise}. Solutions to this have been proposed and implemented, notably feedback mechanisms involving stochastic loading, measurement, and adjustment with optical tweezers \cite{loading}. This was successfully demonstrated on a set of over 50 atoms loaded defect-free in under 400 ms \cite{loading}.
+
+\section{Computation on Qubits}
+
+\subsection{Types of Qubits}
+
+Various options exist for creating a qubit between two particular energy levels of a Rubidium atom's valence electron. They include $\ket{gg}$, $\ket{rg}$, and $\ket{rr}$ qubits.\\
+$\ket{gg}$ qubits are encoded into 2 long-lived ground states of the atom, commonly between states separated by hyperfine splitting \cite{lukin}. Because of the stability of both of these states, these qubits offer excellent coherence, with single qubit dephasing times of 10 ms \cite{ground}. On the other hand, 2-qubit interactions are still possible by briefly exciting the atoms to Rydberg states before immediately bringing them back down to one of the ground states. These kinds of 2-qubit gates are naturally prone to low interference from nearby qubits because you can selectively excite only those qubits that you wish to interact, turning on strong vdW interactions between only those two among the entire ensemble.\\
+$\ket{gr}$ qubits are encoded with one ground state and one Rydberg state. These qubits have significantly reduced coherence times of around 20 $\mu$s \cite{grqubits}, a product of the instability of the Rydberg states. They also experience always-on vdW interactions of the form
+\eq
+  H_{rr}=\frac{C_6}{R^6}\ket{rr}\bra{rr}
+  \label{eq:blockade}
+\qe
+which makes it difficult to operate on specific sets of qubits \cite{gates}. On the other hand, the significant differences between the $\ket{g}$ and $\ket{r}$ states make these qubits easy to measure and manipulate with optical tweezers, which facilities single qubit operations \cite{grqubits}. \\
+$\ket{rr}$ qubits are encoded between two different Rydberg states. This kind of encoding is the least stable, but it allows taking advantage of the long-range dipole-dipole interactions between the two different Rydberg states. Specifically, if Rydberg states $\ket{r_1}$ and $\ket{r_2}$ are used to encode $\ket{0}$ and $\ket{1}$, then we will have an interaction Hamiltonian
+\eq
+  H_{01}=\frac{C_3}{R^3}\ket{01}\bra{10}+\;\text{h.c.}\\
+\qe
+The previously mentioned other types of qubits do not experience these dipole-dipole interactions to first order, because they use only 1 unique Rydberg state, which is not dipole-coupled to itself.
+
+\subsection{Quantum Operations}
+
+For the rest of this section, we will focus on $\ket{gg}$ qubits, as their stability and long coherence makes them perhaps the best candidate for universal quantum computation and thus the most interesting platform for which to discuss quantum gate implementations.\\
+The most common implementation of unitary quantum operations, or gates, is achieved through the use of tunable laser pulses on single or multiple Rydberg atoms in an array. These laser pulses produce Rabi oscillations on their targets, rotating the corresponding state. By adjusting the laser pulse length, frequency, and phase, arbitrary gates can be realized. \\
+
+\subsection{Single Qubit Gates}
+
+Optically-driven transitions between states $\ket{a}$ and $\ket{b}$ on a single atom are described by the resultant Rabi oscillations. The transition Hamiltonian for this is \cite{pulser}
+\eq
+  H^{ab}_t=\frac{1}{2}\vec{\Omega}\cdot\vec{\sigma}
+\qe
+where $\hbar=1$, and
+\eq
+  \vec{\Omega}=(\Omega \cos\varphi, -\Omega\sin\varphi, \Delta)\\
+  \vec{\sigma}=(\sigma_x,\sigma_y,\sigma_z)
+\qe
+where $\varphi$ and $\Delta=\omega_{ba}-\omega$ are the phase and detuning respectively of the pulse, and $\Omega$ is the Rabi frequency (the coupling between $\ket{a}$ and $\ket{b}$). Simplifying, this gives
+\eq
+  H^{ab}_t=\frac{\Omega}{2}(e^{i\varphi}\ket{b}\bra{a}+e^{-i\varphi}\ket{a}\bra{b})-\Delta\ket{a}\bra{a}
+\qe
+where we have subtracted $\frac{\Delta}{2} I$, which simply shifts the energy reference by a constant factor. The time evolution operator corresponding to this is
+\eq
+  e^{-iH_t^{ab}\tau}=e^{-i\frac{1}{2}\Omega\cos\varphi\sigma_x\tau}e^{i\frac{1}{2}\Omega\sin\varphi\sigma_y\tau}e^{-i\frac{1}{2}\Delta\sigma_z\tau}
+  \label{eq:time}
+\qe
+For $\Delta=0$ we see that this is a rotation of the Bloch sphere by $\Omega\cos\varphi\tau$ around the $x$ axis, and $-\Omega\sin\varphi\tau$ around the $y$ axis. Thus we can build arbitrary $R_x$ and $R_y$ gates with this, which are enough to construct any single-qubit gate \cite{shor}.
+
+\subsection{Two-Qubit Gates}
+
+To implement entangling 2 qubit gates, some inter-qubit interaction is necessary. When in one of their ground states, Rydberg atoms do not interact strongly with each other - instead, we must excite them to Rydberg states. Assuming identical atoms, two Rydberg-excited qubits will experience a blockade Hamiltonian of the form shown in (\ref{eq:blockade}). Thus by pulsing two nearby atoms into their Rydberg states and coherently back into their ground states, we can implement the gates necessary to achieve a universal set for quantum computation. Note that for the Rydberg interactions to dominate in the short timespan that they are realized, we must have $C_6/R^6\gg \Omega$.\\
+One example is a particular implementation of the CZ gate introduced by Jaskch \textit{et al.} \cite{jaskch}, which consists of one $\Omega \tau=\pi$ pulse on the first qubit, followed by a $2\pi$ pulse on the second, followed by another $\pi$ pulse on the first qubit. The pulse is made resonant to the $\ket{1}\to\ket{r}$ transition, and decoupled from the $\ket{0}$ state. Thus when the initial state is $\ket{00}$, no action is applied, while if the state is $\ket{10}$, the first qubit is rotated by $2\pi$, and if the state is $\ket{01}$ then the second qubit is rotated by $2\pi$. But if the state is $\ket{11}$, the first qubit is rotated by $2\pi$, but the second qubit is not, because the Rydberg blockade pushes the second qubit's $\ket{r}$ state up in energy. Thus except in the $\ket{00}$ case, the total state picks up a $-1$ phase, since $R_x(2\pi)=-I$. This gives a CZ gate, up to a -1 global phase, with the basis transformation of $\ket{ab}\to\ket{\bar{a}\bar{b}}$. This is depicted in Figure (\ref{fig:cz}).\\
+\img{cz.png}{Pulse sequence for the CZ gate proposed by Jaskch \textit{et al.}. Reprinted from \cite{concise}.}{fig:cz}
+Another example of an entangling gate, which was created in an attempt to solve the practical problems of individually targeting qubits and the increased loss due to multiple $\pi$ pulses \cite{lukin}, implements a CZ gate with two back-to-back pulses on both qubits at once. This was introduced and experimentally realized by Levine \textit{et al.} \cite{lukin}, and involves a pulse at phase $\varphi$ followed by a pulse at phase $0$ of the same length. The detuning $\Delta$, phase $\varphi$, and pulse length $\tau$ were optimized to rotate the 2-qubit state out of their Rydberg states after the application of the gate, and optimal values of 
+\eq
+  \Delta=0.377\Omega,\;\quad \varphi=3.90242,\; \tau=2.7328\pi/\Omega
+\qe
+were found.
+
+\section{Single-Pulse 2-Qubit Quantum Gates}
+
+While the CZ gate construction given in Levine \textit{et al.} overcomes some of the issues of the original, it is interesting to consider what kind of entanglement we can get from the most basic of pulses; that is, a single pulse on both qubits. To quantify this, we will use the definition of the \textit{entangling power} of a unitary operator $U$, denoted $e_p$, as described in Wang \textit{et al.} \cite{power}. To understand the expression for $e_p$, we start with the linear entropy E of a 2-particle state, a common measure of the entanglement of a state:
+\eq
+  E(\ket{\psi})\equiv 1-\tr_1\rho_1^2
+\qe
+We also define the operator entanglement:
+\eq
+  E(U)=1-\frac{1}{16}\tr(U^{\otimes 2}S_{13}U^{\dagger\otimes 2}S_{13})
+\qe
+where $S_{ij}$ is the SWAP gate.
+From this, Wang \textit{et al.} define the entangling power of an operator as the average linear entropy of $U$ acting on unentangled states, and choosing the Haar measure derive an expression for it in terms of the operator entanglement:
+\eq
+  e_p(U)=\int E(U(\ket{\psi_1}\otimes \ket{\psi_2}))d\mu(\psi_1,\psi_2)\\
+  =\frac{4}{9}(E(U)+E(US_{12})-E(S_{12}))
+\qe
+Wang \textit{et al.} prove a proposition stating that for a general controlled-$U$ gate, 
+\eq
+  e_p(C_U)=\frac{4}{9}E(C_U)
+\qe 
+in the case of CNOT, we calculate
+\eq
+  E(C_{\sigma_x})=\frac{1}{2}\implies e_p(CNOT)=e_p(C_{\sigma_x})=\frac{2}{9}
+\qe
+Since $E(\ket{\psi})\leq \frac{1}{2}\implies E(U)\leq \frac{1}{2}$ \cite{power}, this implies CNOT is a maximally entangling controlled operation. So, we see from the previous section that we can achieve maximally entangling controlled operations with 2 pulses on two $\ket{gg}$ qubits at once. \\
+What about with one pulse? We perform a systematic parameter search of $\tau,\varphi,\Delta$ in the Rydberg blockade regime with $(C_6/R^6)/\Omega=100$. The complete unitary describing the time evolution due to a pulse is as given in (\ref{eq:time}), but note that it is $9\times 9$, as we must consider all states $\ket{0},\ket{1},\ket{r}$ for each qubit. So for a $9\times 9$ pulse operator $U$, our objective function being minimized is
+\eq
+  L(U)\equiv 1-e_p(U_{01})e^{\alpha(S(U)-1)}
+\qe
+where $\alpha=10$ and the score $S$ defined by 
+\eq
+  S(U)&\equiv \frac{\eta_1}{\eta_1+\eta_2}\\
+  \eta_1&\equiv\sum_{a,b\in\{00,01,10,11\}}\bra{a}U\ket{b}\\
+  \eta_2&\equiv\sum_{a\in\{00,01,10,11\}}\sum_{b\in\{0r,1r,r0,r1,rr\}}(\bra{a}U\ket{b}+\bra{b}U\ket{a})
+\qe
+quantifies to what degree $U$ maps states in the subspace $\mathcal{H}_{01}$ spanned by $\ket{00},\ket{01},\ket{10},\ket{11}$ back into that same subspace. Lastly, $U_{01}$ is the $4\times 4$ operator corresponding to $U$ in the $\mathcal{H}_{01}$ subspace.\\
+This objective attempts to maximize the entangling power of $U$ while heavily penalizing it for leaving atoms in Rydberg states after application. Performing the parameter sweep in 
+\eq
+  0< &\tau<32\pi/\Omega\\
+  -\Omega<&\Delta<\Omega\\
+  \varphi=0
+  \label{eq:sweep}
+\qe
+we can plot $\text{max}_{\Delta}(1-L(U))$ as a function of $\tau$ in Figure (\ref{fig:sweep}).
+\img[0.5\textwidth]{res}{$\text{max}_{\Delta}(1-L(U))$ as a function of $\tau\Omega/\pi$.}{fig:sweep}
+Of particular note is the peak at
+\eq
+  \Delta=0.52833\Omega,\quad \tau=26.5267\pi/\Omega
+\qe
+which gives a power of $0.2193$ and a a score of $0.9981$. Given the numerical error rate of this simulation and the finite approximations being made, it would seem that we have found a maximally entangling controlled gate with a single laser pulse. $U_{01}$ corresponding to this pulse is
+\eq
+  U_{01}=\mat
+    1 \\
+    & 1 \\
+    & & 1 \\
+    & & & e^{-i(0.9117)/\pi}
+  \tam
+\qe
+which is nearly exactly a CZ gate. Additional investigation would be required to confirm that we can indeed achieve a true CZ gate here.
+
+\section{Analog Computation}
+
+The flexibility of the Rydberg optical lattice platform allows for its use not just in digital quantum computation, but in quantum simulations as well, which involve analog control over the many-body Hamiltonian describing the entire array. This opens the door to exploring a variety of classically intractable problems, and lends itself naturally to the simulation of certain quantum systems. \\
+For instance, Rydberg arrays have been proposed to simulate certain unsolved many-body problems, such as the 2-dimensional Hubbard model \cite{hubbard}. This model lends itself particularly well to the optical lattice formulation, as the optical potential can be engineered in strength, thereby tuning the hopping parameter for atoms between adjacent sites, and atoms in the same site is naturally a higher-energy state \cite{3d}.\\
+On the other hand, Rydberg array computing has been proposed as a method of solving certain NP-hard problems. As an example, we will demonstrate how it can be used to solve the Maximum Independent Set problem, which is know to be NP-complete. The problem definition is as follows: given a set $V$ of vertices and a set $E$ of unordered edges between them, what is the largest subset $S$ of $V$ such that no two elements of $S$ are connected by an edge? A simple solution to this is proposed in \cite{maxset}, with a system of $|V|$ particles. The state of atom $v$ is assigned $\ket{1}$ if and only if $v\in S$, and we use the Hamiltonian
+\eq
+  H_P=\sum_{v\in V}-\Delta n_v+\sum_{(v,w)\in E}Un_vn_w
+\qe
+where $n_v=\ket{1}_v\bra{1}$, and $U>\Delta>0$. The ground state of this Hamiltonian corresponds to minimizing the above. The condition $\Delta>0$ implies it is favorable to include as many atoms in the $\ket{1}$ state as possible, but the condition $U>\Delta$ makes it is not favorable to excite an addition atom if it is connected via an edge to an atom that is already excited. Thus we see that the ground state is indeed every atom being in state $\ket{1}$ if and only if it is in $S$. This Hamiltonian is naturally realized with a Rydberg atom array where vertices are assigned to atoms in such a way that each pair of atoms that have an edge between them are physically adjacent. With such an arrangement, the state corresponding to $S$ is achieved by globally pulsing to excite all atoms into their Rydberg state. If the Rydberg blockade radius $R_b$ is enough to include nearest neighbors but not other atoms, then the resulting state will have as many atoms excited to their Rydberg states as possible given that no two adjacent atoms are both excited, which gives $S$ \cite{maxset}.
+
+\section{Future Challenges}
+
+While Rydberg atoms offer one of the most promising platforms for multibody simulations and quantum computation in the classically-intractable regime, many challenges remain to be overcome in the effort to scale further.\\
+One of the most prominent areas of improvement lies in the optical lattices confining the qubits \cite{concise}. Specifically, even if the stochastic nature of loading is overcome, the typical lifetime of an atom in such a lattice before escaping is rarely larger than 100s \cite{gates}. For a system of just 100 qubits, this means 1 will be lost on average per second. Overcoming this would involve faster gates, which can be partially achieved by optimizing the optical-pulse gate implementations as discussed above.\\
+In addition, the standard methods of fluorescence imaging for measurement by nature destroy (collapse) the states of the atoms in the array. This makes non-destructive measurements, for example measurements of the total energy, difficult to implement. Since such measurements are crucial for certain algorithms, especially quantum error correction, some proposals that rely on high fidelity and non-interacting adjacent states have been made to ameliorate this \cite{demol}, but have yet to be implemented.\\
+Another limitation arises from the fact that interaction between Rydberg atoms and their environment typically limits excitation times to 100 $\mu$s \cite{gates}. This is a product of coupling to thermal noise and electromagnetic fields, which means possible solutions include implementing cryogenic conditions and screening out any incident radiation. 
+
+\begin{thebibliography}{5}
+
+% \bibitem{Engines} Kopeliovich, Dmitri. $"$Effect of Oil Viscosity on Hydrodynamic Friction of Engine Bearings.$"$ SubsTech Substance and Technologies, 3 Feb. 2018. \url{http://www.substech.com/dokuwiki/doku.php?id=effect_of_oil_viscosity_on_hydrodynamic_friction_of_engine_bearings}
+
+\bibitem{summary} Henriet, L., Beguin, L., Signoles, A., Lahaye, T., Browaeys, A., Reymond, G. O., \& Jurczak, C. (2020). Quantum computing with neutral atoms. \textit{Quantum, 4}, 327.
+
+\bibitem{concise} Wu, X., Liang, X., Tian, Y., Yang, F., Chen, C., Liu, Y. C., ... \& You, L. (2020). A concise review of Rydberg atom based quantum computation and quantum simulation. \textit{Chinese Physics B}.
+
+\bibitem{ground} Picken, C. J., Legaie, R., McDonnell, K., \& Pritchard, J. D. (2018). Entanglement of neutral-atom qubits with long ground-Rydberg coherence times. \textit{Quantum Science and Technology, 4}(1), 015011.
+
+\bibitem{lukin} Levine, H., Keesling, A., Semeghini, G., Omran, A., Wang, T. T., Ebadi, S., ... \& Lukin, M. D. (2019). Parallel implementation of high-fidelity multiqubit gates with neutral atoms. \textit{Physical review letters, 123}(17), 170503.
+
+\bibitem{grqubits} Levine, H., Keesling, A., Omran, A., Bernien, H., Schwartz, S., Zibrov, A. S., ... \& Lukin, M. D. (2018). High-fidelity control and entanglement of Rydberg-atom qubits. \textit{Physical review letters, 121}(12), 123603.
+
+\bibitem{gates} Morgado, Manuel \& Whitlock, Shannon. (2020). Quantum simulation and computing with Rydberg qubits. 
+
+\bibitem{pulser} Silvério, H., Grijalva, S., Dalyac, C., Leclerc, L., Karalekas, P. J., Shammah, N., ... \& Henriet, L. (2021). Pulser: An open-source package for the design of pulse sequences in programmable neutral-atom arrays. \textit{arXiv preprint arXiv:2104.15044}.
+
+\bibitem{maxset} Pichler, H., Wang, S. T., Zhou, L., Choi, S., \& Lukin, M. D. (2018). Quantum optimization for maximum independent set using Rydberg atom arrays. \textit{arXiv preprint arXiv:1808.10816}.
+
+\bibitem{shor} Michael A. Nielsen and Isaac L. Chuang. 2011. Quantum Computation and Quantum Information: 10th Anniversary Edition (10th. ed.). Cambridge University Press, USA.
+
+\bibitem{jaskch} Jaksch, D., Cirac, J. I., Zoller, P., Rolston, S. L., Côté, R., \& Lukin, M. D. (2000). Fast quantum gates for neutral atoms. \textit{Physical Review Letters, 85}(10), 2208.
+
+\bibitem{loading} Endres, M., Bernien, H., Keesling, A., Levine, H., Anschuetz, E. R., Krajenbrink, A., ... \& Lukin, M. D. (2016). Atom-by-atom assembly of defect-free one-dimensional cold atom arrays. \textit{Science, 354}(6315), 1024-1027.
+
+\bibitem{3d} Nelson, K. D., Li, X., \& Weiss, D. S. (2007). Imaging single atoms in a three-dimensional array. \textit{Nature Physics, 3}(8), 556-560.
+
+\bibitem{proj} Covey, J. P., Madjarov, I. S., Cooper, A., \& Endres, M. (2019). 2000-times repeated imaging of strontium atoms in clock-magic tweezer arrays. \textit{Physical review letters, 122}(17), 173201.
+
+\bibitem{measure} de Mello, D. O., Schäffner, D., Werkmann, J., Preuschoff, T., Kohfahl, L., Schlosser, M., \& Birkl, G. (2019). Defect-free assembly of 2D clusters of more than 100 single-atom quantum systems. \textit{Physical review letters, 122}(20), 203601.
+
+\bibitem{hubbard} Dauphin, A., Mueller, M., \& Martin-Delgado, M. A. (2012). Rydberg-atom quantum simulation and Chern-number characterization of a topological Mott insulator. \textit{Physical Review A, 86}(5), 053618.
+
+\bibitem{demol} Vasilyev, D. V., Grankin, A., Baranov, M. A., Sieberer, L. M., \& Zoller, P. (2020). Monitoring quantum simulators via quantum nondemolition couplings to atomic clock qubits. \textit{PRX Quantum, 1}(2), 020302.
+
+\bibitem{power} Wang, X., Sanders, B. C., \& Berry, D. W. (2003). Entangling power and operator entanglement in qudit systems. \textit{Physical Review A, 67}(4), 042323.
+
+\bibitem{block} Urban, E., Johnson, T. A., Henage, T., Isenhower, L., Yavuz, D. D., Walker, T. G., \& Saffman, M. (2009). Observation of Rydberg blockade between two atoms. \textit{Nature Physics, 5}(2), 110-114.
+
+\end{thebibliography}
+
+\end{document}
+

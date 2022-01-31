@@ -1,0 +1,255 @@
+\documentclass[11pt]{article}
+
+\author{Vassilios Kaxiras}
+\title{ES 274 Pset 4}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[bottom]{footmisc}
+\usepackage[margin=1in]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{principle}{Principle}
+\newtheorem*{solution}{Solution}
+
+\usepackage{mdframed}
+\newcommand{\Mod}[1]{\,(\mathrm{mod}\,#1)}
+
+\renewcommand{\u}[1]{\underline{#1}}
+
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.5\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newenvironment{coherence}{\begin{mdframed}\begin{center}\underline{Coherence Checks}\end{center}}{\end{mdframed}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Vassilios Kaxiras}
+
+\begin{document}
+
+\maketitle
+
+\begin{solution}[1]
+  \begin{enumerate}[(i)]
+    \item Consider the following protocol. When Alice wants to send a bit to Bob, both her and Bob should choose, randomly and independently, whether to include their beam splitters. Then, Bob should always measure in the $\{D_2,D_1\}$ basis. After sending a stream of bits, Alice should communicate classically and openly with Bob to figure out for which bits they both had their beam splitters and for which neither of them had them. For the former, Bob will have measured exactly what Alice sent him. For the latter, Bob will have measured what Alice sent him, but bit flipped, so he should flip the bits of those parts of the messsages. Bits sent when just one of Alice or Bob had their splitters enabled should be discarded, since Bob will have measured the same results with the same probabilities regardless of what Alice sent. We can see all this by writing down the action of the system on the qubits. First, some notation: denote a photon traveling to the right (emitted from S1) as $\ket{0}$, and a photon travelling to the left (emitted from S2) as $\ket{1}$. Alice and Bob's beam splitters apply the following operation on the photon:
+    \eq
+      B_A=B_B=\frac{1}{\sqrt{2}}\mat 1 & i \\ i & 1\tam
+    \qe
+    while the mirrors between the beam splitters apply a $\sigma_x$ operation. D1 measures if the photon is in the $\ket{1}$ state, while D2 measures if the photon is in the $\ket{0}$ state. Thus we see that the four possible operations on a photon sent by Alice are
+    \begin{center}
+      \begin{tabular}{c|c|c|c|c}
+        & $\sigma_x$ & $\sigma_x B_A$ & $B_B\sigma_x$ & $B_B\sigma_x B_A$ \\
+        \hline
+        $\ket{0}$ & $\ket{1}$ & $\frac{1}{\sqrt{2}}(i\ket{0}+\ket{1})$ & $\frac{1}{\sqrt{2}}(i\ket{0}+\ket{1})$ & $i\ket{0}$ \\
+        $\ket{1}$ & $\ket{0}$ & $\frac{1}{\sqrt{2}}(\ket{0}+i\ket{1})$ & $\frac{1}{\sqrt{2}}(\ket{0}+i\ket{1})$ & $i\ket{1}$ \\
+      \end{tabular}
+    \end{center}
+    As an example, suppose Alice sends the following bit stream:
+    \eq
+      01100001
+    \qe
+    For each bit, denote 0 as no beam splitters, 1 as only Alice's, 2 as only Bob's, and 3 as both. Then suppose the beam splitters are chosen randomly such that
+    \eq
+      01302103
+    \qe
+    Then one possibility is Bob would measure
+    \eq
+      10111011
+    \qe
+    After communicating the beam splitter configuration, Bob would know to flip the first, 4th, and 7th bits he received, and discard the 2nd, 5th, and 6th bits, obtaining the message
+    \eq
+      0X10XX01
+    \qe
+    which is a correct partial reconstruction of Alice's message.
+    \item In principle, this should work no matter how far Alice and Bob are. In practice, decoherence of the photon by coupling to its environment becomes more and more likely the further distance it has to travel, so if Alice and Bob are far enough away it would fail more often than not.
+    \item One-time pad works by exchanging a secret key of length at least as large as the messag being sent between the two parties. Then, the message is encrypted using that secret key, and as long as the key is kept secret, the encrypted message is cryptographically secure. Encryption works by simply adding the message to the key, mod the number of letters in your key/message alphabet. Quantum key distribution can be used to securely distribute the secret key between two parties that are physically separated, so it provides a method of safely implementing one-time pad.
+    \item Eve could intercept the message after Alice's beam splitter, apply her own beam splitter $B^e_1$ depending on the basis she wishes to measure in, and measure using two detectors $D^e_1,D^e_2$ which path the photon is on. Then, Eve can send a photon from one of two sources $S^e_1,S^e_2$ she controls through a beam splitter $B^e_2$ (if she measured with a beam splitter, otherwise she won't apply this beam splitter) to Alice. See Figure (\ref{fig:eve}) for a graphical description of this setup.
+    \img{1iv}{Eve's eavesdropping setup.}{fig:eve}
+    \item Without the presence of Eve, Alice and Bob's beam splitter setup will align $\frac{1}{2}$ of the time, and bits sent when aligned will be correctly received. When the setups are not aligned, Bob will get random bits, but the classical communication step after sending the bits will lead Bob to discard those bits and achieve an overall error rate of $\boxed{0}$.\\
+    With the presence of Eve, bits that are not discarded will correspond to bits sent with beam splitters aligned between Alice and Bob, as before. For bits where Alice and Bob both placed their beam splitters, the transmission will be perfect if Eve also places her beam splitter, while if she doesn't she will measure in the wrong basis and destroy the information, leading to a 1/2 chance of error. Similarly, for bits where Alice and Bob don't place their beam splitters, if Eve places her splitter it will lead to a 1/2 loss rate, and otherwise the transmission will be perfect. So assuming Eve places her beamsplitter randomly, the overall error rate is $\boxed{\frac{1}{4}}$. Thus the maximum error rate acceptable for this kind of communication is $\boxed{<\frac{1}{4}}$.
+    %With the presence of Eve, information will only be sent correctly if Alice, Bob, and Eve's beam splitters are all aligned. If just one of them is unaligned, then somewhere along the process the message will become equally likely $\ket{0}$ or $\ket{1}$ regardless of what it started out as. There are only two possibilies out of 8 where all three beam splitter setups are aligned - they are either all on, or all off. Thus the error rate is $1-\frac{1}{8}(2+6(1/2))=\boxed{\frac{3}{8}}$.\\
+    \item Denote $X$ as the number of detections of bits on Bob's ends that are due to dark counts per second. With a resolution of $10^9$ per second, and a dark count of $10^4$ per detector, the probability that any given time slot of the $10^9$ possible slots in a detector is triggered by a dark count is $10^{-5}$. However, if either of the two detectors go off, which has a chance of $2\cdot 10^{-5}$, this will be read as a bit. Since there are $10^6$ synchronized detection slots per second, this means $E(X)=20$. To have an error rate of at most $1/4$, we need at least 60 correct bits per second. The number of correct bits measured by Bob per second is, accounting for loss factor $L$, only half of the bits having aligned bases between Alice and Bob, and the efficiency of the detectors:
+    \eq
+      L\frac{1}{2}10^6\frac{1}{10}=\frac{L}{2}10^5
+    \qe
+    so we need
+    \eq
+      \frac{L}{2}10^5>60\implies L>0.0012\to 29.2 \;\text{dB}
+    \qe
+    so the total distance we can cover is
+    \eq
+      \frac{29.2}{0.2}\approx\boxed{146\;\text{km}}
+    \qe
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[2]
+  \begin{enumerate}[(i)]
+    \item We can see from simple geometry that
+    \eq
+      \ket{H}=\cos\theta\ket{\theta}-\sin\theta\ket{\theta+\pi/2},\quad \ket{V}=\sin\theta\ket{\theta}+\cos\theta\ket{\theta+\pi/2}
+    \qe
+    So
+    \eq
+      \frac{1}{\sqrt{2}}(\ket{HH}+\ket{VV})=\frac{1}{\sqrt{2}}(\cos^2\theta\ket{\theta\theta}-\cos\theta\sin\theta(\ket{\theta\;\theta+\pi/2}+\ket{\theta+\pi/2\;\theta})+\\
+      \sin^2\theta\ket{\theta+\pi/2\;\theta+\pi/2}+\sin^2\theta\ket{\theta\theta}+\sin\theta\cos\theta(\ket{\theta\;\theta+\pi/2}+\ket{\theta+\pi/2\;\theta})+\\
+      \cos^2\theta\ket{\theta+\pi/2\;\theta+\pi/2})=\boxed{\frac{1}{\sqrt{2}}(\ket{\theta\theta}+\ket{\theta+\pi/2\;\theta+\pi/2})}
+    \qe
+    \item So, from the above we see that no matter the value of $\theta$, if we align two polarizers at angle $\theta$ to measure the two photons we will observe them to come out together along the polarization axis ($\ket{\theta\theta}$) or we will observe neither ($\ket{\theta+\pi/2\;\theta+\pi/2}$), with each outcome having probability $\frac{1}{2}$.
+    \item If the polarizers are crossed, then we will never observe any light coming through both of them, since there is no amplitude to the $\ket{\theta\;\theta+\pi/2},\;\ket{\theta+\pi/2\;\theta}$ states. Instead, we will see a photon coming through one polarizer, with each being equally likely (probability $\boxed{\frac{1}{2}}$).
+    \item This implies that we can measure quantum correlation, or at least correlation of the type $\ket{\Phi^+}$, with rotated polarizers. If the state is not correlated, we can write it as $\ket{\theta_1\theta_2}$. Then if $\theta_1=\theta_2$ or $\theta_1=\theta_2+\pi$, we can rotate the aligned polarizers from 0 to $2\pi$. When we hit $\theta_1+\pi/2$, we will never see any photons come through, which will indicate we are not in the $\ket{\Phi^+}$ state. On the other hand, if $\theta_1\neq \theta_2,\;\theta_1\neq \theta_2+\pi$, with crossed polarizers at $\theta_1,\theta_1+\pi/2$ there will be some probability of measuring photons from both polarizers (projecting into the $\ket{\theta_1\;\theta_1+\pi/2}$ state), in which case we will know we're not in $\ket{\Phi^+}$. So by performing these two tests we can conclude if we're in the $\ket{\Phi^+}$ state or not.
+    \item We see
+    \eq
+      \ket{\Phi^-}=\frac{1}{\sqrt{2}}(\ket{HH}-\ket{VV})=\frac{1}{\sqrt{2}}((\cos^2\theta-\sin^2\theta)\ket{\theta\theta}-\\
+      2\sin\theta\cos\theta(\ket{\theta\;\theta+\pi/2}+\ket{\theta+\pi/2\;\theta})+(\sin^2\theta-\cos^2\theta)\ket{\theta+\pi/2\;\theta+\pi/2})=\\
+      \frac{1}{\sqrt{2}}(\cos (2\theta)(\ket{\theta\theta}-\ket{\theta+\pi/2\;\theta+\pi/2})-\sin(2\theta)(\ket{\theta\;\theta+\pi/2}+\ket{\theta+\pi/2\;\theta}))
+    \qe
+    And
+    \eq
+      \ket{\Psi^+}=\frac{1}{\sqrt{2}}(\ket{HV}+\ket{VH})=\\
+      \frac{1}{\sqrt{2}}(\sin(2\theta)(\ket{\theta\theta}-\ket{\theta+\pi/2\;\theta+\pi/2})+\cos(2\theta)(\ket{\theta+\pi/2\;\theta}+\ket{\theta\;\theta+\pi/2}))\\
+      \ket{\Psi^-}=\frac{1}{\sqrt{2}}(\ket{HV}-\ket{VH})=\frac{1}{\sqrt{2}}(\ket{\theta\;\theta+\pi/2}-\ket{\theta+\pi/2\;\theta})
+    \qe
+    We can make a table for the probabilities of various outcomes. Denote $x_1x_2,\;x_i\in\{0,1\}$ as the outcome where a photon comes out of detector $i$ for the two detectors if $x_i=1$. Then, for aligned polarizers,
+    \begin{center}
+      \begin{tabular}{c|c|c|c|c}
+        & 00 & 01 & 10 & 11\\
+        \hline 
+        $\ket{\Phi^+}$ & 1/2 & 0 & 0 & 1/2\\
+        $\ket{\Phi^-}$ & $\cos^2(2\theta)/2$ & $\sin^2(2\theta)/2$ & $\sin^2(2\theta)/2$ & $\cos^2(2\theta)/2$\\
+        $\ket{\Psi^+}$ & $\sin^2(2\theta)/2$ & $\cos^2(2\theta)/2$ & $\cos^2(2\theta)/2$ & $\sin^2(2\theta)/2$\\
+        $\ket{\Psi^-}$ & 0 & 1/2 & 1/2 & 0
+      \end{tabular}
+    \end{center}
+    While for crossed polarizers,
+    \begin{center}
+      \begin{tabular}{c|c|c|c|c}
+        & 00 & 01 & 10 & 11\\
+        \hline 
+        $\ket{\Phi^+}$ & 0 & 1/2 & 1/2 & 0 \\
+        $\ket{\Phi^-}$ & $\sin^2(2\theta)/2$ & $\cos^2(2\theta)/2$ & $\cos^2(2\theta)/2$ & $\sin^2(2\theta)/2$ \\
+        $\ket{\Psi^+}$ & $\cos^2(2\theta)/2$ & $\sin^2(2\theta)/2$ & $\sin^2(2\theta)/2$ & $\cos^2(2\theta)/2$\\
+        $\ket{\Psi^-}$ & 1/2 & 0 & 0 & 1/2
+      \end{tabular}
+    \end{center}
+    \item We see
+    \eq
+      \ket{HH}=\cos^2\theta\ket{\theta\theta}-\cos\theta\sin\theta(\ket{\theta\;\theta+\pi/2}+\ket{\theta+\pi/2\;\theta})+\sin^2\theta\ket{\theta+\pi/2\;\theta+\pi/2}\\
+      \ket{VV}=\sin^2\theta\ket{\theta\theta}+\sin\theta\cos\theta(\ket{\theta\;\theta+\pi/2}+\ket{\theta+\pi/2\;\theta})+\cos^2\theta\ket{\theta+\pi/2\;\theta+\pi/2}
+    \qe
+    with probability 1/2 each, we see $\ket{HH}$ or $\ket{VV}$. So we consider each case separately, and calculate the probabilities of the outcomes from two aligned polarizers:
+    \begin{center}
+      \begin{tabular}{c|c|c|c|c}
+        & 00 & 01 & 10 & 11\\
+        \hline 
+        $\ket{HH}$ & $\sin^4\theta$ & $\cos^2\theta\sin^2\theta$ & $\cos^2\theta\sin^2\theta$ & $\cos^4\theta$ \\
+        $\ket{VV}$ & $\cos^4\theta$ & $\cos^2\theta\sin^2\theta$ & $\cos^2\theta\sin^2\theta$ & $\sin^4\theta$ \\
+      \end{tabular}
+    \end{center}
+    So the overall probability of the two photons coming out of both polarizers is
+    \eq
+      \boxed{\frac{\cos^4\theta+\sin^4\theta}{2}}
+    \qe
+    \item We see from the previous portion that for certain bases, we get definite results from the given classical correlation. For example, if $\theta=\pi/2$, we always see both $\ket{VV}$, or nothing. However, we do not have the quantum interference that keeps the probability of both photons leaving the polarizers at 1/2 no matter the basis. Thus we can detect that this is classical correlation by sweeping $\theta$ and observing as the rate of photon detection changes.
+  \end{enumerate}
+\end{solution}
+
+\begin{solution}[3]
+  \begin{enumerate}[(a)]
+    \item $\ket{\Psi^-}$ is the only Bell state that is antisymmetric under exchange of the two photons - all the other Bell states are symmetric. The total polarization-space wavefunction of two photons incident on a beam splitter must be symmetric, since they are bosons, so that means the space component is antisymmetric only for $\ket{\Psi^-}$ as well. Denote $\ket{a},\ket{b}$ as the input ports of the beam splitter, and $\ket{c},\ket{d}$ as the output ports. Then the space component of the wavefunction for $\ket{\Psi^-}$ polarized photons is
+    \eq
+      \frac{1}{\sqrt{2}}(\ket{a}\ket{b}-\ket{b}\ket{a})
+    \qe
+    Under the beam splitter, this transforms to
+    \eq
+      \frac{1}{2\sqrt{2}}((\ket{c}+i\ket{d})(i\ket{c}+\ket{d})-(i\ket{c}+\ket{d})(\ket{c}+i\ket{d}))=\frac{1}{\sqrt{2}}(\ket{cd}-\ket{dc})
+    \qe
+    So the two photons will leave through opposite ports.\\
+    For the other Bell states, the space component is, if the photons come through both input ports,
+    \eq
+      \frac{1}{\sqrt{2}}(\ket{a}\ket{b}+\ket{b}\ket{a})\to \\
+      \frac{1}{2\sqrt{2}}((\ket{c}+i\ket{d})(i\ket{c}+\ket{d})+(i\ket{c}+\ket{d})(\ket{c}+i\ket{d}))=\frac{i}{\sqrt{2}}(\ket{cc}+\ket{dd})
+    \qe
+    So the photons will leave in the same spatial mode.
+    \item Yes, you can distinguish them by applying a polarization beam splitter that only reflects light that is $\ket{V}$ polarized after each output port of the 50/50 beamsplitter. If the state is $\ket{\Phi^{\pm}}$, then the photons will again exit along one mode:
+    \eq
+      \frac{1}{2}(\ket{HH}\pm\ket{VV})(\ket{cc}+\ket{dd})\to \frac{1}{2}(\ket{HHe_1e_1}\pm\ket{VVf_1f_1}+\ket{HHe_2e_2}\pm\ket{VVf_2f_2})
+    \qe
+    where $e_1,f_1$ are the outputs of the polarizing beam splitter after port $c$, while $e_2,f_2$ are the outputs of the polarizing beam splitter after port $d$.\\
+    But if the state is $\ket{\Psi^+}$, they will always exit along different ports:
+    \eq
+      \frac{1}{2}(\ket{HV}+\ket{VH})(\ket{cc}+\ket{dd})\to \frac{1}{2}(\ket{HVe_1f_1}+\ket{VHf_1e_1}+\ket{HVe_2f_2}+\ket{VHf_2e_2})
+    \qe
+    So you can measure this with two detectors at the two output ports of the polarization beam splitter. This is graphically depicted in Figure (\ref{fig:dist}).
+    \img{3b}{Setup to distinguish between $\ket{\Phi^{\pm}}$ and $\ket{\Psi^+}$.}{fig:dist}
+    \item The initial state is (when not labelled, states are in $ABCD$ order):
+    \eq
+      \ket{\psi_0}=\frac{1}{\sqrt{2}}(\ket{HV}-\ket{VH})\otimes \frac{1}{\sqrt{2}}(\ket{HV}-\ket{VH})=\\
+      \frac{1}{2}(\ket{HVHV}-\ket{VHHV}-\ket{HVVH}+\ket{VHVH})
+    \qe
+    The projection matrices for the various outcomes of the Bell measurement on BC are
+    \eq
+      \Pi_{\Phi^{\pm}}=(I\otimes \frac{1}{\sqrt{2}}(\ket{HH}\pm\ket{VV})\otimes I) (I\otimes \frac{1}{\sqrt{2}}(\bra{HH}\pm\bra{VV})\otimes I)=\\
+      \frac{1}{2}(I\otimes (\ket{HH}\bra{HH}\pm\ket{VV}\bra{HH}\pm\ket{HH}\bra{VV}+\ket{VV}\bra{VV})\otimes I)\\
+      \Pi_{\Psi^{\pm}}=(I\otimes \frac{1}{\sqrt{2}}(\ket{HV}\pm\ket{VH})\otimes I) (I\otimes \frac{1}{\sqrt{2}}(\bra{HV}\pm\bra{VH})\otimes I)=\\
+      \frac{1}{2}(I\otimes (\ket{HV}\bra{HV}\pm\ket{VH}\bra{HV}\pm\ket{HV}\bra{VH}+\ket{VH}\bra{VH})\otimes I)
+    \qe
+    so the outcomes after performing a Bell measurement on BC are
+    \eq
+      \Pi_{\Phi^{\pm}}\ket{\psi_0}=\frac{1}{4}(-\ket{VHHV}\mp\ket{VVVV}\mp\ket{HHHH}-\ket{HVVH})_{ABCD}=\\ 
+      \frac{1}{4}(-\ket{VVHH}\mp\ket{VVVV}\mp\ket{HHHH}-\ket{HHVV})_{DABC}=\\
+      \mp\frac{1}{2}\frac{1}{\sqrt{2}}(\ket{HH}\pm\ket{VV})_{DA}\otimes \frac{1}{\sqrt{2}}(\ket{HH}\pm\ket{VV})_{BC}\to\boxed{\mp\ket{\Phi^{\pm}\Phi^{\pm}}_{DABC}}\\
+      \Pi_{\Psi^{\pm}}\ket{\psi_0}=\frac{1}{4}(\ket{VHVH}\pm\ket{VVHH}\pm\ket{HHVV}+\ket{HVHV})_{ABCD}=\\ 
+      \frac{1}{4}(\ket{HVHV}\pm\ket{HVVH}\pm\ket{VHHV}+\ket{VHVH})_{DABC}=\\
+      \frac{1}{2}\frac{1}{\sqrt{2}}(\ket{HV}\pm\ket{VH})_{DA}\otimes \frac{1}{\sqrt{2}}(\ket{HV}\pm\ket{VH})_{BC}\to\boxed{\ket{\Psi^{\pm}\Psi^{\pm}}_{DABC}}\\
+    \qe
+    Thus we see that whatever state we measure for $BC$, we project $AD$ into the same state! Qualitatively, if we were to correct A, D with the appropriate Pauli matrices based on the measurement outcome of BC, we would have teleported C to A and B to D and AD would be in the $\ket{\Psi^-}$ state.
+    \item Let's consider all the cases. Denote $\ket{\psi_1}$ as the state after we measure A, D, which we perform before measuring BC in the Bell basis. There are 4 outcomes for A,D, each with 2 possible measurement outcomes for B, C afterwards:
+    \eq
+      &\ket{\psi_1}=\ket{HVHV}\implies \Pi_{\Phi^{\pm}}\ket{\psi_1}\to 0\\
+      &\ket{\psi_1}=\ket{HVHV}\implies \Pi_{\Psi^{\pm}}\ket{\psi_1}\to \ket{H} \frac{1}{\sqrt{2}}(\ket{VH}\pm\ket{HV})\ket{V}=\pm \ket{H\Psi^{\pm}V}\\
+      &\ket{\psi_1}=\ket{VHHV}\implies \Pi_{\Phi^{\pm}}\ket{\psi_1}\to \ket{V}\frac{1}{\sqrt{2}}(\ket{HH}\pm\ket{VV})\ket{V}=\ket{V\Phi^{\pm}V}\\
+      &\ket{\psi_1}=\ket{VHHV}\implies \Pi_{\Psi^{\pm}}\ket{\psi_1}\to 0\\
+      &\ket{\psi_1}=\ket{HVVH}\implies \Pi_{\Phi^{\pm}}\ket{\psi_1}\to \ket{V}\frac{1}{\sqrt{2}}(\pm\ket{HH}+\ket{VV})\ket{V}=\pm\ket{H\Phi^{\pm}H}\\
+      &\ket{\psi_1}=\ket{HVVH}\implies \Pi_{\Psi^{\pm}}\ket{\psi_1}\to 0\\
+      &\ket{\psi_1}=\ket{VHVH}\implies \Pi_{\Phi^{\pm}}\ket{\psi_1}\to 0\\
+      &\ket{\psi_1}=\ket{VHVH}\implies \Pi_{\Psi^{\pm}}\ket{\psi_1}\to \ket{V} \frac{1}{\sqrt{2}}(\ket{HV}\pm\ket{VH})\ket{H}=\ket{V\Psi^{\pm}H}\\
+    \qe
+    If we were instead to measure A, D after the Bell basis measurement, we can consider the 4 different starting dual Bell states and the resulting states after measuring A, D at the end:
+    \eq
+      \ket{\Phi^{\pm}\Phi^{\pm}}_{DABC}\to \ket{H\Phi^{\pm}H}_{ABCD} \;\text{or}\;\ket{V\Phi^{\pm}V}_{ABCD}\\
+      \ket{\Psi^{\pm}\Psi^{\pm}}_{DABC}\to \ket{H\Psi^{\pm}V}_{ABCD} \;\text{or}\;\ket{V\Phi^{\pm}H}_{ABCD}\\
+    \qe
+    This is exactly the same as the results when we measured A, D first! Furthermore, all the probabilities are also the same (all $1/8$). So, it appears that the time-ordering of quantum measurements is not unique, and it doesn't matter at what point you make your measurement, but rather what the measurement is.
+  \end{enumerate}
+\end{solution}
+
+\end{document}

@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+
+\author{Vassilios Kaxiras}
+\title{Physics 195a Final}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[bottom]{footmisc}
+\usepackage[margin=1in]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{principle}{Principle}
+\newtheorem*{solution}{Solution}
+
+\usepackage{mdframed}
+\newcommand{\Mod}[1]{\,(\mathrm{mod}\,#1)}
+
+\renewcommand{\u}[1]{\underline{#1}}
+
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.9\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newenvironment{coherence}{\begin{mdframed}\begin{center}\underline{Coherence Checks}\end{center}}{\end{mdframed}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Vassilios Kaxiras}
+
+\begin{document}
+
+\eq
+  \ket{n_{1\uparrow}n_{1\downarrow}n_{2\uparrow}n_{2\downarrow}}\\
+  c_{1\uparrow}\ket{1000}=\ket{0000}\\
+  c^{\dagger}_{1\uparrow}\ket{0000}=\ket{1000}\\
+  c_{1\uparrow}\ket{0100}=c_{1\uparrow}\ket{0000}=0\\
+  n_{i\sigma}=c^{\dagger}_{i\sigma}c_{i\sigma}
+\qe
+\eq
+  U>\frac{2}{g(E_F)v}
+\qe
+
+\end{document}

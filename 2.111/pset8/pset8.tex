@@ -1,0 +1,160 @@
+\documentclass[11pt]{article}
+
+\author{Vassilios Kaxiras}
+\title{MIT 8.370 Pset 8}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[bottom]{footmisc}
+\usepackage[margin=1in]{geometry}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{principle}{Principle}
+\newtheorem*{solution}{Solution}
+
+\usepackage{mdframed}
+\newcommand{\Mod}[1]{\,(\mathrm{mod}\,#1)}
+
+\renewcommand{\u}[1]{\underline{#1}}
+
+\newcommand{\eq}{\begin{equation}\begin{aligned}}
+\newcommand{\qe}{\end{aligned}\end{equation}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\Bra}[1]{\left\langle #1\right|}
+\newcommand{\Ket}[1]{\left|#1\right\rangle}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\mat}{\begin{bmatrix}}
+\newcommand{\tam}{\end{bmatrix}}
+\newcommand{\tr}{\text{Tr}}
+
+\newcommand{\img}[4][0.9\textwidth]{
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1]{#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newenvironment{coherence}{\begin{mdframed}\begin{center}\underline{Coherence Checks}\end{center}}{\end{mdframed}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Vassilios Kaxiras}
+
+\begin{document}
+
+\maketitle
+
+\begin{solution}[1]
+  Suppose we can compute the discrete log problem, finding $x$ for $g^x=h\mod p$ given $h$ and a generator $g$. \\
+  So, if we are given $g$, we can choose a random $h$ between 1 and $p-1$, and run the discrete log algorithm to obtain 
+  $x$. If $g$ is a generator, we will succeed. If $g$ is not a generator, it generates a subgroup of $(\mathbb{Z}/p\mathbb{Z})^{\times}$,
+  and by Lagrange's Theorem this subgroup can have size at most half of $(\mathbb{Z}/p\mathbb{Z})^{\times}$. Thus no matter what
+  the discrete log algorithm outputs in this case, at least half the time we will get an incorrect value, because at least half of the
+  values of $h$ will have no solution to $g^x=h$. It is easy to check
+  if $g^x=h$ once you have $x$, so we can run $n$ trials of this procedure, randomly picking an $h$ and trying to find its
+  discrete log. If we find an $x$ for every one of the $n$ values of $h$ we choose, we can conclude that $g$ is a generator, and we will be wrong with probability
+  \eq
+    \leq \frac{1}{2^n}
+  \qe
+  if we find a wrong $x$ at any step, then we immediately know $g$ is not a generator.\\
+  On the other hand, $g$ is a generator if and only if the period of $g^i$ is $p-1$. So, we can apply phase estimation and calculate the period $r$ of $g^i$, and then 
+  conclude it is a generator if $r=p-1$.
+\end{solution}
+
+\begin{solution}[2]
+  Denote the first unitary gates that act on all three qubits as $U_0$. Denote the controlled gate as $U_1$ (labelled $U$ in the diagram), and denote $U_2$ as the gates applied to only the second and third qubits after $U_1$.\\
+  The state before the $U_1$ step can be written as 
+  \eq
+    U_0\ket{\psi}=a_0\ket{0}\ket{\phi_0}+a_1\ket{1}\ket{\phi_1}
+  \qe
+  where $\ket{\phi_0},\ket{\phi_1}$ are states of the second and third qubits.\\
+  If we measure sooner rather than later, we will have two results. If we measure 0, $U_1$ will not be applied and we will end up with the state
+  \eq
+    \ket{0}(U_2\ket{\phi_0})
+  \qe
+  this has probability $|a_0|^2$. \\
+  If we measure 1, we will apply $U_1$ and obtain the state
+  \eq
+    \ket{1}(U_2(U_1\otimes I)\ket{\phi_1})
+  \qe
+  with probability $|a_1|^2$.\\
+  Now, if we measure later, we first apply a controlled $U_1$ gate on the first two qubits, followed by $U_2$ on the last two:
+  \eq
+    (I\otimes U_2)(CU_1\otimes I)U_0\ket{\psi}=a_0\ket{0}(U_2\ket{\phi_0})+a_1\ket{1}(U_2(U_1\otimes I)\ket{\phi_1})
+  \qe
+  if we now measure, we immediately see that we get the same results for the same probabilities.
+\end{solution}
+
+\begin{solution}[3]
+  Suppose this person is measuring in the $\ket{\alpha},\ket{\beta}$ basis, where $\ket{\alpha}$ comprises of all the unmarked states, and $\ket{\beta}$ comprises of all the marked states. This way the person measures the state as marked or not. If they fail, and measure unmarked, the state will collapse to $\ket{\alpha}$. So, after each failure, they restart the algorithm at $\ket{\alpha}$. If we presume $M\ll N$, then we can approximate the algorithm as starting at $\ket{\alpha}$ on the first try as well (even though it actually starts at $\ket{\psi}=\sqrt{\frac{N-M}{N}}\ket{\alpha}+\sqrt{\frac{M}{N}}\ket{\beta}$). After each try, the state is moved an angle $\theta$ counterclockwise in the $\ket{\alpha}$ - $\ket{\beta}$ plane, where 
+  \eq
+    \sin(\theta/2)=\sqrt{\frac{M}{N}}
+  \qe
+  thus the probability of measuring $\ket{\beta}$ after $K$ steps is
+  \eq
+    \sin^2(K\theta)
+  \qe
+  so the number of tries, $N$, that it will take the person to succeed is a random variable with the First Success distribution, which means eventually the person will succeed, but on average it will take
+  \eq
+    \boxed{\frac{K}{\sin^2(K\theta)}\approx \frac{N}{4KM}}
+  \qe
+  total steps (tries times $K$), where we have included an approximation for $K\theta\ll 1$.
+\end{solution}
+
+\begin{solution}[4]
+  \begin{enumerate}[(a)]
+    \item We see
+    \eq
+      O_x\ket{\psi}=\sqrt{\frac{N-M}{N}}\ket{\alpha}+e^{i\theta}\sqrt{\frac{M}{N}}\ket{\beta}=\ket{\psi}+(e^{i\theta}-1)\sqrt{\frac{M}{N}}\ket{\beta}
+    \qe
+    So one iteration, we have the state
+    \eq
+      G\ket{\psi}=((1-e^{i\theta})\ket{\psi}\bra{\psi}-I)\left(\ket{\psi}+(e^{i\theta}-1)\sqrt{\frac{M}{N}}\ket{\beta}\right)
+    \qe
+    If we want to be entirely in the $\ket{\beta}$ state after this one iteration, since $\ket{\psi}$ contains non-zero $\ket{\alpha}$ dependence, we must have that the coefficient in front of $\ket{\psi}$ above is 0, since that is the origin of all $\ket{\alpha}$ dependence. Thus the coefficient of $\ket{\beta}$ must have norm 1:
+    \eq
+      1=\left|(e^{i\theta}-1)\sqrt{\frac{M}{N}}\right|^2=\frac{M}{N}(2-2\cos\theta)
+    \qe
+    since $0\leq 2-2\cos\theta\leq 4$, we have
+    \eq
+      \boxed{\frac{N}{M}\leq 4}
+    \qe
+    \item If we can get $\frac{M}{N}\geq \frac{1}{4}$, then since we know $N,M$ we can find the $\theta'$ necessary to complete the algorithm in one step from that point:
+    \eq
+      \theta'=\cos^{-1}\left(1-\frac{N}{2M}\right)
+    \qe
+    so we can modify the standard Grover algorithm to perform as many iterations as we need to get to a state that has effective $M'$ such that we meet the above bound. Specifically, since after $k$ iterations of the standard algorithm we are in the state
+    \eq
+      \sin\left((2k+1)\frac{\theta}{2}\right)\ket{\alpha}+
+      \cos\left((2k+1)\frac{\theta}{2}\right)\ket{\beta}
+    \qe
+    where 
+    \eq
+      \sin(\theta/2)=\sqrt{\frac{M}{N}}
+    \qe
+    We want to perform $k$ steps such that
+    \eq
+      \sin\left((2k+1)\frac{\theta}{2}\right)=\sqrt{\frac{M'}{N}}\geq \sqrt{\frac{1}{4}}=\frac{1}{2}\implies (2k+1)\frac{\theta}{2}\geq \frac{\pi}{6}\implies k\geq \frac{\pi}{6\theta}-\frac{1}{2}
+    \qe
+    so given $N,M$, we perform $k=\lceil \frac{\pi}{6\theta}-\frac{1}{2}\rceil$ steps of the regular Grover algorithm, and then calculate
+    \eq
+      \theta'=\cos^{-1}\left(1-\frac{N}{2M'}\right)=\cos^{-1}\left(1-\frac{1}{2\sin^2\left((2k+1)\frac{\theta}{2}\right)}\right)
+    \qe
+    and perform one step of the modified Grover algorithm with phase $\theta'$. 
+  \end{enumerate}
+\end{solution}
+
+\end{document}
